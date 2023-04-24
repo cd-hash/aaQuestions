@@ -17,7 +17,7 @@ class User
       FROM users
       WHERE users.id=:user_id
     SQL
-    data.map { |datum| User.new(datum) }
+    User.new(data[0])
   end
 
   def initialize(options)
