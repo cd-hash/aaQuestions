@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative '../db_conn'
 
+# ORM class for Questions table
 class Question
   attr_reader :title, :body, :author_id
 

@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative '../db_conn'
 
+# ORM class for Users table
 class User
   attr_reader :first_name, :last_name
 
