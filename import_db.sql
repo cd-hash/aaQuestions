@@ -27,7 +27,7 @@ CREATE TABLE question_follows (
     , user_id INTEGER NOT NULL
     , question_id INTEGER NOT NULL
     , FOREIGN KEY (user_id) REFERENCES users(id)
-    , FOREIGN KEY (question_followed) REFERENCES questions(id)
+    , FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
 CREATE TABLE replies (
@@ -38,7 +38,7 @@ CREATE TABLE replies (
     , author_id INTEGER NOT NULL
     , FOREIGN KEY (original_question_id) REFERENCES questions(id)
     , FOREIGN KEY (parent_reply_id) REFERENCES replies(id)
-    , FOREIGN KEY (reply_author_id) REFERENCES users(id)
+    , FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
 CREATE TABLE question_likes (
@@ -96,7 +96,7 @@ INSERT INTO
 VALUES
     ((SELECT id FROM questions WHERE questions.title = 'Jay Question'),
     NULL,
-    (SELECT id FROM users WHERE users.fname = 'Chris' AND users.lname = 'Ruggeri'),
+    (SELECT id FROM users WHERE users.fname = 'Chris' AND users.lname = 'Dresher'),
     'Did you say NOW NOW NOW?'
 );
 
