@@ -17,7 +17,7 @@ class QuestionFollows
       FROM question_follows
       WHERE question_follows.id=:question_follows_id
     SQL
-    data.map { |datum| QuestionFollows.new(datum) }
+    QuestionFollows.new(data[0])
   end
 
   def initialize(options)

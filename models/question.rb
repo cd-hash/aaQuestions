@@ -17,7 +17,7 @@ class Question
       FROM questions
       WHERE questions.id=:question_id
     SQL
-    data.map { |datum| Question.new(datum) }
+    Question.new(data[0])
   end
 
   def initialize(options)
