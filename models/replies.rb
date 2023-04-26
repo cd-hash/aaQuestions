@@ -29,6 +29,15 @@ class Replies
     data.map { |datum| Replies.new(datum) }
   end
 
+  def self.find_by_question_id(question_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, question_id: question_id)
+      SELECT *
+      FROM replies
+      WHERE replies.original_question_id=:question_id
+    SQL
+    data.map { |datum| Replies.new(datum) }
+  end
+
   def initialize(options)
     @id = options['id']
     @body = options['body']
