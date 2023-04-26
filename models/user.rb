@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../db_conn'
+require_relative './question'
 
 # ORM class for Users table
 class User
@@ -34,5 +35,9 @@ class User
     @id = options['id']
     @first_name = options['fname']
     @last_name = options['lname']
+  end
+
+  def authored_questions
+    Question.find_by_author_id(@id)
   end
 end
