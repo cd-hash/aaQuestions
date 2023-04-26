@@ -21,12 +21,12 @@ class Question
   end
 
   def self.find_by_author_id(author_id)
-    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, author_id: author_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, author_id: author_id)
       SELECT *
       FROM questions
       WHERE questions.author_id=:author_id
     SQL
-    Question.new(data)
+    data.map { |datum| Question.new(datum) }
   end
 
   def initialize(options)
