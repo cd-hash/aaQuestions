@@ -12,12 +12,21 @@ class Replies
   end
 
   def self.find_by_id(reply_id)
-    data = QuestionsDBConnection.instance.execute(<<-SQL, reply_id: reply_id)
+    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, reply_id: reply_id)
       SELECT *
       FROM replies
       WHERE replies.id=:reply_id
     SQL
-    Replies.new(data[0])
+    Replies.new(data)
+  end
+
+  def self.find_by_user_id(user_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, user_id: user_id)
+      SELECT *
+      FROM replies
+      WHERE replies.author_id=:user_id
+    SQL
+    data.map { |datum| Replies.new(datum) }
   end
 
   def initialize(options)
