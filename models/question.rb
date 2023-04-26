@@ -12,12 +12,21 @@ class Question
   end
 
   def self.find_by_id(question_id)
-    data = QuestionsDBConnection.instance.execute(<<-SQL, question_id: question_id)
+    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, question_id: question_id)
       SELECT *
       FROM questions
       WHERE questions.id=:question_id
     SQL
-    Question.new(data[0])
+    Question.new(data)
+  end
+
+  def self.find_by_author_id(author_id)
+    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, author_id: author_id)
+      SELECT *
+      FROM questions
+      WHERE questions.author_id=:author_id
+    SQL
+    Question.new(data)
   end
 
   def initialize(options)
