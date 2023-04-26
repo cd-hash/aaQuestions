@@ -2,6 +2,7 @@
 
 require_relative '../db_conn'
 require_relative './user'
+require_relative './replies'
 
 # ORM class for Questions table
 class Question
@@ -39,5 +40,9 @@ class Question
 
   def author
     User.find_by_id(@author_id)
+  end
+
+  def replies
+    Replies.find_by_question_id(@id)
   end
 end
