@@ -3,6 +3,7 @@
 require_relative '../db_conn'
 require_relative './question'
 require_relative './replies'
+require_relative './question_follows'
 
 # ORM class for Users table
 class User
@@ -44,5 +45,9 @@ class User
 
   def authored_replies
     Replies.find_by_user_id(@id)
+  end
+
+  def followed_questions
+    QuestionFollows.followed_questions_for_user_id(@id)
   end
 end
