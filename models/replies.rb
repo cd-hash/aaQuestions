@@ -40,6 +40,15 @@ class Replies
     data.map { |datum| Replies.new(datum) }
   end
 
+  def self.find_by_parent_id(parent_reply_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, parent_reply_id: parent_reply_id)
+      SELECT *
+      FROM replies
+      WHERE replies.parent_reply_id=:parent_reply_id
+    SQL
+    data.map { |datum| Replies.new(datum) }
+  end
+
   def initialize(options)
     @id = options['id']
     @body = options['body']
@@ -58,5 +67,9 @@ class Replies
 
   def parent_reply
     Replies.find_by_id(@parent_reply_id)
+  end
+
+  def child_replies
+    Replies.find_by_parent_id(@parent_reply_id)
   end
 end
