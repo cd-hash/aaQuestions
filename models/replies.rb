@@ -55,4 +55,8 @@ class Replies
   def question
     Question.find_by_id(@original_question_id)
   end
+
+  def parent_reply
+    Replies.find_by_id(@parent_reply_id)
+  end
 end
