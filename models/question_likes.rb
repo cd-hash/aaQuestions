@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../db_conn'
+require_relative './user'
 
 # ORM class for Question Like table
 class QuestionLikes
@@ -12,12 +13,23 @@ class QuestionLikes
   end
 
   def self.find_by_id(question_likes_id)
-    data = QuestionsDBConnection.instance.execute(<<-SQL, question_likes_id: question_likes_id)
+    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, question_likes_id: question_likes_id)
       SELECT *
       FROM question_likes
       WHERE question_likes.id=:question_likes_id
     SQL
-    QuestionLikes.new(data[0])
+    QuestionLikes.new(data)
+  end
+
+  def self.likers_for_question_id(question_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, question_id: question_id)
+      SELECT users.*
+      FROM question_likes
+      LEFT JOIN users
+      ON users.id=question_likes.user_id
+      WHERE question_likes.question_id=:question_id
+    SQL
+    data.map { |datum| User.new(datum) }
   end
 
   def initialize(options)
