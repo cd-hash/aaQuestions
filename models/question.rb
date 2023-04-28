@@ -32,6 +32,10 @@ class Question
     data.map { |datum| Question.new(datum) }
   end
 
+  def self.most_followed(limit_n)
+    QuestionFollows.most_followed_questions(limit_n)
+  end
+
   def initialize(options)
     @id = options['id']
     @title = options['title']
