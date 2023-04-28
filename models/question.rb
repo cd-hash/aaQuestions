@@ -4,6 +4,7 @@ require_relative '../db_conn'
 require_relative './user'
 require_relative './replies'
 require_relative './question_follows'
+require_relative './question_likes'
 
 # ORM class for Questions table
 class Question
@@ -36,6 +37,10 @@ class Question
     QuestionFollows.most_followed_questions(limit_n)
   end
 
+  def self.most_liked(limiter)
+    QuestionLikes.most_liked_questions(limiter)
+  end
+
   def initialize(options)
     @id = options['id']
     @title = options['title']
@@ -53,5 +58,13 @@ class Question
 
   def followers
     QuestionFollows.followers_for_question_id(@id)
+  end
+
+  def likers
+    QuestionLikes.likers_for_question_id(@id)
+  end
+
+  def num_likes
+    QuestionLikes.num_likes_for_question_id(@id)
   end
 end

@@ -4,6 +4,7 @@ require_relative '../db_conn'
 require_relative './question'
 require_relative './replies'
 require_relative './question_follows'
+require_relative './question_likes'
 
 # ORM class for Users table
 class User
@@ -49,5 +50,28 @@ class User
 
   def followed_questions
     QuestionFollows.followed_questions_for_user_id(@id)
+  end
+
+  def liked_questions
+    QuestionLikes.liked_questions_for_user_id(@id)
+  end
+
+  def average_karma
+    QuestionsDatabase.get_first_value(<<-SQL, author_id: @id)
+      SELECT
+        AVG(likes) AS avg_karma
+      FROM (
+        SELECT
+          COUNT(question_likes.user_id) AS likes
+        FROM
+          questions
+        LEFT OUTER JOIN
+          question_likes ON questions.id = question_likes.question_id
+        WHERE
+          questions.author_id = :author_id
+        GROUP BY
+          questions.id
+      )
+    SQL
   end
 end
