@@ -32,6 +32,17 @@ class QuestionLikes
     data.map { |datum| User.new(datum) }
   end
 
+  def self.num_likes_for_question_id(question_id)
+    data = QuestionsDBConnection.instance.get_first_row(<<-SQL, question_id: question_id)
+      SELECT COUNT(users.id) num_likers
+      FROM question_likes
+      LEFT JOIN users
+      ON users.id=question_likes.user_id
+      WHERE question_likes.question_id=:question_id
+    SQL
+    data['num_likers']
+  end
+
   def initialize(options)
     @id = options['id']
     @user_id = options['user_id']
