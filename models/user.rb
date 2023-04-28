@@ -74,4 +74,34 @@ class User
       )
     SQL
   end
+
+  def save
+    if @id
+      update
+    else
+      insert
+    end
+  end
+
+  def insert
+    QuestionsDBConnection.instance.execute(<<-SQL, fname: @first_name, lname: @last_name)
+      INSERT INTO
+        users (fname, lname)
+      VALUES
+        (:fname, :lname)
+    SQL
+    @id = QuestionsDBConnection.instance.last_insert_row_id
+  end
+
+  def update
+    QuestionsDBConnection.instance.execute(<<-SQL, id: @id, fname: @first_name, lname: @last_name)
+      UPDATE
+        users
+      SET
+        fname = :fname, lname = :lname
+      WHERE
+        users.id = :id
+    SQL
+    @id = QuestionsDBConnection.instance.last_insert_row_id
+  end
 end
