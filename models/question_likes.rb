@@ -2,6 +2,7 @@
 
 require_relative '../db_conn'
 require_relative './user'
+require_relative './question'
 
 # ORM class for Question Like table
 class QuestionLikes
@@ -41,6 +42,32 @@ class QuestionLikes
       WHERE question_likes.question_id=:question_id
     SQL
     data['num_likers']
+  end
+
+  def self.liked_questions_for_user_id(user_id)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, user_id: user_id)
+      SELECT questions.*
+      FROM question_likes
+      LEFT JOIN questions
+      ON questions.id=question_likes.question_id
+      WHERE question_likes.user_id=:user_id
+    SQL
+    data.map { |datum| Question.new(datum) }
+  end
+
+  def self.most_liked_questions(limit_n)
+    data = QuestionsDBConnection.instance.execute(<<-SQL, limit_n: limit_n)
+      SELECT questions.id question_id
+      , COUNT(questions.id) liker_count
+      , questions.*
+      FROM question_likes ql
+      LEFT JOIN questions
+      ON ql.question_id=questions.id
+      GROUP BY question_id
+      ORDER BY liker_count DESC
+      LIMIT :limit_n
+    SQL
+    data.map { |datum| Question.new(datum) }
   end
 
   def initialize(options)
